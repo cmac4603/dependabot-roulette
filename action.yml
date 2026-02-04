@@ -1,23 +1,25 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: dependabot-jira-roulette
+description: Randomly assign dependabot pull requests to members of a Github team
+author: cmac4603
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: heart
+  icon: refresh-ccw
   color: red
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
+  github_team:
+    description: Github team to randomly select a user from
     required: true
-    default: '1000'
+  jira_server_url:
+    description: Jira Server URL
+    required: true
+  jira_token:
+    description: Jira API token
+    required: true
 
-# Define your outputs here.
 outputs:
-  time:
-    description: Your output description here
+  username:
+    description: Github username of the lucky winner
 
 runs:
   using: node24

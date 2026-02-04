@@ -1,0 +1,35 @@
+{
+  "action": "opened",
+  "number": 123,
+  "pull_request": {
+    "number": 123,
+    "title": "Bump lodash from 4.17.20 to 4.17.21",
+    "user": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "type": "Bot"
+    },
+    "body": "Bumps [lodash](https://github.com/lodash/lodash) from 4.17.20 to 4.17.21.",
+    "state": "open",
+    "head": {
+      "ref": "dependabot/npm_and_yarn/lodash-4.17.21",
+      "sha": "abc123"
+    },
+    "base": {
+      "ref": "main",
+      "sha": "def456"
+    }
+  },
+  "repository": {
+    "id": 123456789,
+    "name": "my-repo",
+    "full_name": "my-org/my-repo",
+    "owner": {
+      "login": "my-org"
+    }
+  },
+  "sender": {
+    "login": "dependabot[bot]",
+    "type": "Bot"
+  }
+}

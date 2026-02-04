@@ -1,5 +1,6 @@
 name: dependabot-jira-roulette
-description: Randomly assign dependabot pull requests to members of a Github team
+description:
+  Randomly assign dependabot pull requests to members of a Github team
 author: cmac4603
 
 branding:
@@ -10,11 +11,8 @@ inputs:
   github_team:
     description: Github team to randomly select a user from
     required: true
-  jira_server_url:
-    description: Jira Server URL
-    required: true
-  jira_token:
-    description: Jira API token
+  github_token:
+    description: Github token with permissions to read team & members
     required: true
 
 outputs:

@@ -1,4 +1,4 @@
-name: dependabot-jira-roulette
+name: dependabot-roulette
 description:
   Randomly assign dependabot pull requests to members of a Github team
 author: cmac4603

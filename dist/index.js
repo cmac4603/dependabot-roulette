@@ -31255,13 +31255,13 @@ async function run() {
     const octokit = githubExports.getOctokit(githubToken);
     const context = githubExports.context;
 
-    // Validate this is a pull request event
+    // validate this is a pull request event
     if (!context.payload.pull_request) {
       coreExports.setFailed('This action must be run on a pull_request event');
       return
     }
 
-    // Validate the PR was opened by Dependabot
+    // validate the pr was opened by dependabot
     const prAuthor = context.payload.pull_request.user.login;
     if (prAuthor !== 'dependabot[bot]') {
       coreExports.info(
@@ -31277,7 +31277,7 @@ async function run() {
     coreExports.debug(`Processing PR #${prNumber} in ${owner}/${repo}`);
     coreExports.debug(`Selecting random user from team: ${githubTeam}`);
 
-    // Parse team slug - expects format "org/team-slug" or just "team-slug"
+    // parse team slug - expects format "org/team-slug" or just "team-slug"
     let orgName = owner;
     let teamSlug = githubTeam;
 
@@ -31287,7 +31287,7 @@ async function run() {
       teamSlug = parts[1];
     }
 
-    // Get team members
+    // get team members
     coreExports.debug(`Fetching members from org: ${orgName}, team: ${teamSlug}`);
     const { data: members } = await octokit.rest.teams.listMembersInOrg({
       org: orgName,
@@ -31301,13 +31301,13 @@ async function run() {
 
     coreExports.debug(`Found ${members.length} team members`);
 
-    // Select a random member
+    // select a random member
     const randomIndex = Math.floor(Math.random() * members.length);
     const selectedUser = members[randomIndex];
 
     coreExports.info(`Selected user: ${selectedUser.login}`);
 
-    // Assign the PR to the selected user
+    // assign the pr to the selected user
     await octokit.rest.issues.addAssignees({
       owner,
       repo,

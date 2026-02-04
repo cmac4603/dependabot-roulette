@@ -1,4 +1,4 @@
-# dependabot-jira-roulette
+# dependabot-roulette
 
 Randomly assign Dependabot pull requests to members of a GitHub team.
 
@@ -20,7 +20,7 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     steps:
       - name: Assign random team member
-        uses: cmac4603/dependabot-jira-roulette@v1
+        uses: cmac4603/dependabot-roulette@v1
         with:
           github_team: your-org/your-team
           github_token: ${{ secrets.GITHUB_TOKEN }}

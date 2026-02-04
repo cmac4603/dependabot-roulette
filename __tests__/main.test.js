@@ -61,6 +61,10 @@ describe('main.js', () => {
       data: teamMembers
     })
 
+    // Mock Math.random to return 0.5, which should select index 1 (user2)
+    // Math.floor(0.5 * 3) = Math.floor(1.5) = 1
+    const mockRandom = jest.spyOn(Math, 'random').mockReturnValue(0.5)
+
     await run()
 
     // Verify team members were fetched
@@ -69,19 +73,87 @@ describe('main.js', () => {
       team_slug: 'my-team'
     })
 
-    // Verify a user was assigned
+    // Verify the correct user was assigned based on mocked randomness
     expect(mockOctokit.rest.issues.addAssignees).toHaveBeenCalledWith({
       owner: 'test-owner',
       repo: 'test-repo',
       issue_number: 123,
-      assignees: expect.arrayContaining([expect.stringMatching(/^user[123]$/)])
+      assignees: ['user2']
     })
 
-    // Verify output was set
-    expect(core.setOutput).toHaveBeenCalledWith(
-      'username',
-      expect.stringMatching(/^user[123]$/)
+    // Verify output was set with the correct user
+    expect(core.setOutput).toHaveBeenCalledWith('username', 'user2')
+
+    mockRandom.mockRestore()
+  })
+
+  it('Selects correct team member for different random values', async () => {
+    const teamMembers = [
+      { login: 'alice' },
+      { login: 'bob' },
+      { login: 'charlie' }
+    ]
+    mockOctokit.rest.teams.listMembersInOrg.mockResolvedValue({
+      data: teamMembers
+    })
+
+    // Test that Math.random of 0.0 selects first member (index 0)
+    // Math.floor(0.0 * 3) = 0
+    const mockRandom = jest.spyOn(Math, 'random').mockReturnValue(0.0)
+
+    await run()
+
+    expect(mockOctokit.rest.issues.addAssignees).toHaveBeenCalledWith({
+      owner: 'test-owner',
+      repo: 'test-repo',
+      issue_number: 123,
+      assignees: ['alice']
+    })
+    expect(core.setOutput).toHaveBeenCalledWith('username', 'alice')
+
+    mockRandom.mockRestore()
+  })
+
+  it('Selects last team member when random approaches 1', async () => {
+    const teamMembers = [
+      { login: 'alice' },
+      { login: 'bob' },
+      { login: 'charlie' }
+    ]
+    mockOctokit.rest.teams.listMembersInOrg.mockResolvedValue({
+      data: teamMembers
+    })
+
+    // Test that Math.random of 0.99 selects last member (index 2)
+    // Math.floor(0.99 * 3) = Math.floor(2.97) = 2
+    const mockRandom = jest.spyOn(Math, 'random').mockReturnValue(0.99)
+
+    await run()
+
+    expect(mockOctokit.rest.issues.addAssignees).toHaveBeenCalledWith({
+      owner: 'test-owner',
+      repo: 'test-repo',
+      issue_number: 123,
+      assignees: ['charlie']
+    })
+    expect(core.setOutput).toHaveBeenCalledWith('username', 'charlie')
+
+    mockRandom.mockRestore()
+  })
+
+  it('Fails when team format has multiple slashes', async () => {
+    core.getInput.mockImplementation((name) => {
+      if (name === 'github_team') return 'org/team/extra'
+      if (name === 'github_token') return 'test-token'
+      return ''
+    })
+
+    await run()
+
+    expect(core.setFailed).toHaveBeenCalledWith(
+      'Invalid team format: "org/team/extra". Expected "org/team-slug" or "team-slug"'
     )
+    expect(mockOctokit.rest.teams.listMembersInOrg).not.toHaveBeenCalled()
   })
 
   it('Handles team slug without org prefix', async () => {

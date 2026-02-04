@@ -1,6 +1,6 @@
 name: dependabot-roulette
 description:
-  Randomly assign dependabot pull requests to members of a Github team
+  Randomly assign dependabot pull requests to members of a GitHub team
 author: cmac4603
 
 branding:
@@ -9,15 +9,15 @@ branding:
 
 inputs:
   github_team:
-    description: Github team to randomly select a user from
+    description: GitHub team to randomly select a user from
     required: true
   github_token:
-    description: Github token with permissions to read team & members
+    description: GitHub token with permissions to read team & members
     required: true
 
 outputs:
   username:
-    description: Github username of the lucky winner
+    description: GitHub username of the lucky winner
 
 runs:
   using: node24

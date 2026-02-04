@@ -23,8 +23,12 @@ jobs:
         uses: cmac4603/dependabot-roulette@v1
         with:
           github_team: your-org/your-team
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.ORG_TOKEN }}
 ```
+
+> **Note:** The default `GITHUB_TOKEN` cannot read team membership. You must use
+> a PAT or GitHub App token with `read:org` scope. See
+> [Permissions](#permissions) for details.
 
 ### Inputs
 
@@ -41,16 +45,17 @@ jobs:
 
 ### Permissions
 
-The `github_token` needs the following permissions:
+The `github_token` needs a PAT or GitHub App token with the following scopes:
 
 - `read:org` - to list team members
-- `pull-requests: write` - to assign users to PRs
+- `repo` - to assign users to PRs
 
-If using the default `GITHUB_TOKEN`, you may need to configure permissions in
-your workflow:
+**Important:** The default `GITHUB_TOKEN` does not have permission to read
+organization team membership. You must use a Personal Access Token (PAT) or
+GitHub App token.
 
-```yaml
-permissions:
-  pull-requests: write
-  organization: read
-```
+#### Using a Personal Access Token
+
+1. Create a PAT with `read:org` and `repo` scopes
+2. Store it as a repository secret (e.g., `ORG_TOKEN`)
+3. Use it in your workflow as shown in the example above

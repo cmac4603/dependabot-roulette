@@ -43,6 +43,12 @@ export async function run() {
 
     if (githubTeam.includes('/')) {
       const parts = githubTeam.split('/')
+      if (parts.length !== 2) {
+        core.setFailed(
+          `Invalid team format: "${githubTeam}". Expected "org/team-slug" or "team-slug"`
+        )
+        return
+      }
       orgName = parts[0]
       teamSlug = parts[1]
     }

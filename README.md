@@ -17,7 +17,7 @@ on:
 jobs:
   assign:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
     steps:
       - name: Assign random team member
         uses: cmac4603/dependabot-roulette@v1

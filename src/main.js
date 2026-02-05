@@ -34,6 +34,16 @@ export async function run() {
     const owner = context.repo.owner
     const repo = context.repo.repo
 
+    // Skip if PR already has assignees
+    const assignees = context.payload.pull_request.assignees
+    if (assignees.length > 0) {
+      const assigneeLogins = assignees.map((a) => a.login).join(', ')
+      core.info(
+        `Pull request already has ${assignees.length} assignee(s): ${assigneeLogins}`
+      )
+      return
+    }
+
     core.debug(`Processing PR #${prNumber} in ${owner}/${repo}`)
     core.debug(`Selecting random user from team: ${githubTeam}`)
 

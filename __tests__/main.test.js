@@ -22,7 +22,8 @@ describe('main.js', () => {
     github.context.payload = {
       pull_request: {
         number: 123,
-        user: { login: 'dependabot[bot]' }
+        user: { login: 'dependabot[bot]' },
+        assignees: []
       }
     }
 
@@ -190,7 +191,8 @@ describe('main.js', () => {
     github.context.payload = {
       pull_request: {
         number: 123,
-        user: { login: 'some-user' }
+        user: { login: 'some-user' },
+        assignees: []
       }
     }
 
@@ -198,6 +200,23 @@ describe('main.js', () => {
 
     expect(core.info).toHaveBeenCalledWith(
       'PR was not opened by Dependabot (author: some-user), skipping'
+    )
+    expect(mockOctokit.rest.teams.listMembersInOrg).not.toHaveBeenCalled()
+  })
+
+  it('Skips PRs that already have assignees', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 123,
+        user: { login: 'dependabot[bot]' },
+        assignees: [{ login: 'existing-user' }]
+      }
+    }
+
+    await run()
+
+    expect(core.info).toHaveBeenCalledWith(
+      'Pull request already has 1 assignee(s): existing-user'
     )
     expect(mockOctokit.rest.teams.listMembersInOrg).not.toHaveBeenCalled()
   })
